@@ -9,8 +9,8 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 set(JIMSRGPR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 
-# # External libraries
-# add_subdirectory(lib)
+# External libraries
+add_subdirectory(lib)
 
 # jIMSRGprime library
 add_subdirectory(jimsrgpr)
@@ -19,8 +19,8 @@ add_subdirectory(jimsrgpr)
 include(CTest)
 enable_testing()
 
-# # ... use Catch2 mostly ...
-# include(lib/Catch2/extras/Catch.cmake)
+# ... use Catch2 mostly ...
+include(lib/Catch2/extras/Catch.cmake)
 
 # # ... but sometimes GoogleTest ...
 # include(GoogleTest)

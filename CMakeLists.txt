@@ -19,8 +19,8 @@ add_subdirectory(jimsrgpr)
 include(CTest)
 enable_testing()
 
-# # ... use Catch2 mostly ...
-# include(lib/Catch2/extras/Catch.cmake)
+# ... use Catch2 mostly ...
+include(lib/Catch2/extras/Catch.cmake)
 
 # # ... but sometimes GoogleTest ...
 # include(GoogleTest)

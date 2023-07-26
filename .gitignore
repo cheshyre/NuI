@@ -30,3 +30,19 @@
 *.exe
 *.out
 *.app
+
+# CMake build directory
+build/
+build_*/
+
+# CMake user presets
+CMakeUserPresets.json
+
+# VS code configuration directory
+.vscode/
+
+# any cached files
+.cache/
+
+# MacOS files
+.DS_Store

@@ -1,0 +1,21 @@
+[
+  { symbol: [ "std::swap", private, "<utility>", public ] },
+  { symbol: [ "swap", private, "<utility>", public ] },
+  { symbol: [ "std::abs", private, "<cmath>", public ] },
+  { symbol: [ "abs", private, "<cmath>", public ] },
+  { symbol: [ "std::string", private, "<string>", public ]},
+  { symbol: [ "std::string_view", private, "<string_view>", public ]},
+  { include: [ "@<__chrono/.*>", private, "<chrono>", public ]},
+  { include: [ "@<__memory/.*>", private, "<memory>", public ]},
+  { include: [ "@<__utility/.*>", private, "<utility>", public ]},
+  { include: [ "@<__algorithm/.*>", private, "<algorithm>", public ]},
+  { include: [ "@<__random/.*>", private, "<random>", public ]},
+  { include: [ "<__tuple>", private, "<utility>", public ]},
+  { include: [ "@<__type_traits/.*>", private, "<type_traits>", public ]},
+  { include: [ "@<malloc/.*>", private, "<cstdlib>", public ]},
+  { include: [ "@<__functional/.*>", private, "<functional>", public ]},
+  { include: [ "@<gtest/gtest.*>", private, "\"gtest/gtest.h\"", public ]},
+  { include: [ "@\"gtest/gtest.*\"", private, "\"gtest/gtest.h\"", public ]},
+  { include: [ "@<CLI/impl/Option.*>", private, "\"CLI/Option.hpp\"", public ]},
+  { include: [ "@\"CLI/impl/Option.*\"", private, "\"CLI/Option.hpp\"", public ]}
+]

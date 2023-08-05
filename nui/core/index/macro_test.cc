@@ -20,13 +20,42 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef JIMSRGPR_CORE_INDEX_INDEX_H_
-#define JIMSRGPR_CORE_INDEX_INDEX_H_
+#include "nui/core/index/macro.h"
 
-// IWYU pragma: begin_exports
+#include "catch2/catch_message.hpp"
+#include "catch2/catch_test_macros.hpp"
 
-#include "jimsrgpr/core/index/macro.h"
+#include "fmt/core.h"
 
-// IWYU pragma: end_exports
+#include "nui/core/index/index.h"
 
-#endif  // JIMSRGPR_CORE_INDEX_INDEX_H_
+NUI_MAKE_INDEX_TYPE(TestIndex1);
+NUI_MAKE_INDEX_TYPE(TestIndex2);
+
+using nui::GenericIndex;
+using nui::TestIndex1;
+using nui::TestIndex2;
+
+TEST_CASE("GenericIndex, Default ctor is 0.") {
+  const GenericIndex i;
+  REQUIRE(i == 0);
+  REQUIRE(i == GenericIndex(0));
+  REQUIRE(i.idx() == 0);
+  REQUIRE(i != GenericIndex::Invalid());
+}
+
+TEST_CASE("TestIndex1, Default ctor is 0.") {
+  const TestIndex1 i;
+  REQUIRE(i == 0);
+  REQUIRE(i == TestIndex1(0));
+  REQUIRE(i.idx() == 0);
+  REQUIRE(i != TestIndex1::Invalid());
+}
+
+TEST_CASE("TestIndex2, Default ctor is 0.") {
+  const TestIndex2 i;
+  REQUIRE(i == 0);
+  REQUIRE(i == TestIndex2(0));
+  REQUIRE(i.idx() == 0);
+  REQUIRE(i != TestIndex2::Invalid());
+}

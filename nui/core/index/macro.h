@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef JIMSRGPR_CORE_INDEX_MACRO_H_
-#define JIMSRGPR_CORE_INDEX_MACRO_H_
+#ifndef NUI_CORE_INDEX_MACRO_H_
+#define NUI_CORE_INDEX_MACRO_H_
 
 #include <cstdint>
 #include <cstdlib>
@@ -30,8 +30,8 @@
 #include "fmt/core.h"
 #include "fmt/format.h"  // IWYU pragma: keep
 
-// IWYU pragma: private, include "jimsrgpr/core/index/index.h"
-// IWYU pragma: friend "jimsrgpr/core/index/.*\.h"
+// IWYU pragma: private, include "nui/core/index/index.h"
+// IWYU pragma: friend "nui/core/index/.*\.h"
 
 // This is a huge macro to create an index type.
 //
@@ -52,18 +52,18 @@
 //
 // The correct use of the macro is illustrated by GenericIndex below:
 //
-// namespace jimsrgpr {
+// namespace nui {
 // class GenericIndex;
 // }
 // // Docstrings here...
-// JIMSRGPR_MAKE_INDEX_TYPE(GenericIndex);
+// NUI_MAKE_INDEX_TYPE(GenericIndex);
 //
 // NOTE: These types are not implicitly convertible to size_t to avoid problems
 // with ambiguous overloads. This has the nice side effect that (even though
 // double implcit conversion is not allowed) there is now no way for 2 of such
 // index types to be accidentally converted into eachother.
-#define JIMSRGPR_MAKE_INDEX_TYPE(IndexType)                                   \
-  namespace jimsrgpr {                                                        \
+#define NUI_MAKE_INDEX_TYPE(IndexType)                                   \
+  namespace nui {                                                        \
   class IndexType {                                                           \
    public:                                                                    \
     /* Tombstone for invalid indices. */                                      \
@@ -119,20 +119,20 @@
   constexpr inline bool operator!=(IndexType a, IndexType b) noexcept {       \
     return a.idx() != b.idx();                                                \
   }                                                                           \
-  } /* namespace jimsrgpr */                                                  \
+  } /* namespace nui */                                                  \
   /* Indices are formatable like size_t or int. */                            \
   template <>                                                                 \
-  struct fmt::formatter<jimsrgpr::IndexType> : fmt::formatter<std::size_t> {  \
-    auto format(const jimsrgpr::IndexType& a, format_context& ctx) const {    \
+  struct fmt::formatter<nui::IndexType> : fmt::formatter<std::size_t> {  \
+    auto format(const nui::IndexType& a, format_context& ctx) const {    \
       return fmt::formatter<std::size_t>::format(a.idx(), ctx);               \
     }                                                                         \
   };
 
-namespace jimsrgpr {
+namespace nui {
 class GenericIndex;
-}  // namespace jimsrgpr
+}  // namespace nui
 
 // A generic index that is not to be used for anything useful.
-JIMSRGPR_MAKE_INDEX_TYPE(GenericIndex);
+NUI_MAKE_INDEX_TYPE(GenericIndex);
 
-#endif  // JIMSRGPR_CORE_INDEX_MACRO_H_
+#endif  // NUI_CORE_INDEX_MACRO_H_

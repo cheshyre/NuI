@@ -20,4 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "jimsrgpr/core/index/index.h"
+#ifndef NUI_CORE_INDEX_INDEX_H_
+#define NUI_CORE_INDEX_INDEX_H_
+
+// IWYU pragma: begin_exports
+
+#include "nui/core/index/macro.h"
+
+// IWYU pragma: end_exports
+
+#endif  // NUI_CORE_INDEX_INDEX_H_

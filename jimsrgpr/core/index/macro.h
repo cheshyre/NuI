@@ -23,11 +23,116 @@
 #ifndef JIMSRGPR_CORE_INDEX_MACRO_H_
 #define JIMSRGPR_CORE_INDEX_MACRO_H_
 
+#include <cstdint>
+#include <cstdlib>
+#include <utility>
+
+#include "fmt/core.h"
+#include "fmt/format.h"  // IWYU pragma: keep
+
 // IWYU pragma: private, include "jimsrgpr/core/index/index.h"
 // IWYU pragma: friend "jimsrgpr/core/index/.*\.h"
 
+// This is a huge macro to create an index type.
+//
+// The goal of these index types is to have unique, incompatible index types
+// that all still have nice features out of the box. We can use these to create
+// indices that reflect very specific use-cases and can be transformed into
+// other indices via explicit function calls.
+//
+// The features supported by an index type created like this are:
+// - Tombstone Invalid() for invalid values.
+// - Default construction to 0.
+// - Implicit construction from size_t.
+// - Explicit conversion to size_t via idx().
+// - In-place and generic addition with itself (also implicitly size_t).
+// - Swap (member and nonmember).
+// - Full set of comparisons.
+// - Formatting via fmt/spdlog in the style of size_t/integers.
+//
+// The correct use of the macro is illustrated by GenericIndex below:
+//
+// namespace jimsrgpr {
+// class GenericIndex;
+// }
+// // Docstrings here...
+// JIMSRGPR_MAKE_INDEX_TYPE(GenericIndex);
+//
+// NOTE: These types are not implicitly convertible to size_t to avoid problems
+// with ambiguous overloads. This has the nice side effect that (even though
+// double implcit conversion is not allowed) there is now no way for 2 of such
+// index types to be accidentally converted into eachother.
+#define JIMSRGPR_MAKE_INDEX_TYPE(IndexType)                                   \
+  namespace jimsrgpr {                                                        \
+  class IndexType {                                                           \
+   public:                                                                    \
+    /* Tombstone for invalid indices. */                                      \
+    constexpr static IndexType Invalid() noexcept { return SIZE_MAX; }        \
+    /* Default ctor initializes to value 0. */                                \
+    constexpr IndexType() noexcept {}                                         \
+    /* Standard ctor from size_t index. */                                    \
+    constexpr IndexType(std::size_t i) noexcept /* NOLINT(runtime/explicit)*/ \
+        : i_(i) {}                                                            \
+    /* Explicitly get size_t index. */                                        \
+    constexpr std::size_t idx() const noexcept { return i_; }                 \
+    /* Increment index in place by other index. */                            \
+    IndexType& operator+=(IndexType other) noexcept {                         \
+      i_ += other.i_;                                                         \
+      return *this;                                                           \
+    }                                                                         \
+    /* Swap with other index. */                                              \
+    void swap(IndexType& other) noexcept {                                    \
+      using std::swap;                                                        \
+      swap(i_, other.i_);                                                     \
+    }                                                                         \
+                                                                              \
+   private:                                                                   \
+    std::size_t i_ = 0UL;                                                     \
+  };                                                                          \
+  /* Swap two indices. */                                                     \
+  inline void swap(IndexType& a, IndexType& b) noexcept { a.swap(b); }        \
+  /* Add two indices. */                                                      \
+  constexpr inline IndexType operator+(IndexType a, IndexType b) noexcept {   \
+    return a.idx() + b.idx();                                                 \
+  }                                                                           \
+  /* Compare two indices. */                                                  \
+  constexpr inline bool operator<(IndexType a, IndexType b) noexcept {        \
+    return a.idx() < b.idx();                                                 \
+  }                                                                           \
+  /* Compare two indices. */                                                  \
+  constexpr inline bool operator>(IndexType a, IndexType b) noexcept {        \
+    return a.idx() > b.idx();                                                 \
+  }                                                                           \
+  /* Compare two indices. */                                                  \
+  constexpr inline bool operator<=(IndexType a, IndexType b) noexcept {       \
+    return a.idx() <= b.idx();                                                \
+  }                                                                           \
+  /* Compare two indices. */                                                  \
+  constexpr inline bool operator>=(IndexType a, IndexType b) noexcept {       \
+    return a.idx() >= b.idx();                                                \
+  }                                                                           \
+  /* Compare two indices. */                                                  \
+  constexpr inline bool operator==(IndexType a, IndexType b) noexcept {       \
+    return a.idx() == b.idx();                                                \
+  }                                                                           \
+  /* Compare two indices. */                                                  \
+  constexpr inline bool operator!=(IndexType a, IndexType b) noexcept {       \
+    return a.idx() != b.idx();                                                \
+  }                                                                           \
+  } /* namespace jimsrgpr */                                                  \
+  /* Indices are formatable like size_t or int. */                            \
+  template <>                                                                 \
+  struct fmt::formatter<jimsrgpr::IndexType> : fmt::formatter<std::size_t> {  \
+    auto format(const jimsrgpr::IndexType& a, format_context& ctx) const {    \
+      return fmt::formatter<std::size_t>::format(a.idx(), ctx);               \
+    }                                                                         \
+  };
+
 namespace jimsrgpr {
-// TODO(mheinz): Add macro to create index type here.
-}
+class GenericIndex;
+}  // namespace jimsrgpr
+
+// A generic index that is not to be used for anything useful.
+JIMSRGPR_MAKE_INDEX_TYPE(GenericIndex);
 
 #endif  // JIMSRGPR_CORE_INDEX_MACRO_H_

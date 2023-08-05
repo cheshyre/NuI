@@ -1,31 +1,31 @@
 add_library(
-  nui_index
-  index.h index.cc
+  nui_indexing
+  indexing.h indexing.cc
   macro.h macro.cc
 )
-add_library(nui::index ALIAS nui_index)
+add_library(nui::indexing ALIAS nui_indexing)
 target_link_libraries(
-  nui_index
+  nui_indexing
   PUBLIC
   fmt::fmt
 )
 
 target_include_directories(
-  nui_index
+  nui_indexing
   PUBLIC
   ${NUI_ROOT_DIR}
 )
 
 add_executable(
-  nui_core_index_macro_test
+  nui_core_indexing_macro_test
   macro_test.cc
 )
 target_link_libraries(
-  nui_core_index_macro_test
-  nui::index
+  nui_core_indexing_macro_test
+  nui::indexing
   Catch2::Catch2WithMain
   fmt::fmt
 )
 catch_discover_tests(
-  nui_core_index_macro_test
+  nui_core_indexing_macro_test
 )

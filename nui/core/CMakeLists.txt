@@ -1,2 +1,2 @@
 # Indices tailored for specific use-cases
-add_subdirectory(index)
+add_subdirectory(indexing)

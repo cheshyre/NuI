@@ -12,9 +12,6 @@ set(JIMSRGPR_ROOT_DIR ${CMAKE_CURRENT_SOURCE_DIR})
 # External libraries
 add_subdirectory(lib)
 
-# jIMSRGprime library
-add_subdirectory(jimsrgpr)
-
 # Tests ...
 include(CTest)
 enable_testing()
@@ -25,5 +22,5 @@ include(lib/Catch2/extras/Catch.cmake)
 # # ... but sometimes GoogleTest ...
 # include(GoogleTest)
 
-# # Unit tests
-# add_subdirectory(tests)
+# jIMSRGprime library + tests
+add_subdirectory(jimsrgpr)

@@ -27,7 +27,6 @@ add_executable(
 target_link_libraries(
   nui_core_indexing_macro_test
   Catch2::Catch2WithMain
-  nui::basics
   nui::indexing
 )
 catch_discover_tests(

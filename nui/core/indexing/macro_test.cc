@@ -22,10 +22,8 @@
 
 #include "nui/core/indexing/macro.h"
 
-#include "catch2/catch_message.hpp"
 #include "catch2/catch_test_macros.hpp"
 
-#include "nui/core/basics/basics.h"
 #include "nui/core/indexing/indexing.h"
 
 NUI_MAKE_INDEX_TYPE(TestIndex1);

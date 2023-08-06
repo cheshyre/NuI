@@ -20,4 +20,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "nui/core/index/index.h"
+#include "nui/core/indexing/indexing.h"

@@ -12,7 +12,7 @@ add_library(nui::indexing ALIAS nui_indexing)
 target_link_libraries(
   nui_indexing
   PUBLIC
-  fmt::fmt
+  nui::basics
 )
 target_include_directories(
   nui_indexing
@@ -26,9 +26,9 @@ add_executable(
 )
 target_link_libraries(
   nui_core_indexing_macro_test
-  nui::indexing
   Catch2::Catch2WithMain
-  fmt::fmt
+  nui::basics
+  nui::indexing
 )
 catch_discover_tests(
   nui_core_indexing_macro_test

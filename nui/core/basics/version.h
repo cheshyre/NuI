@@ -20,39 +20,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "nui/core/indexing/macro.h"
+#ifndef NUI_CORE_BASICS_VERSION_H_
+#define NUI_CORE_BASICS_VERSION_H_
 
-#include "catch2/catch_test_macros.hpp"
+// IWYU pragma: private, include "nui/core/basics/basics.h"
+// IWYU pragma: friend "nui/core/basics/.*\.h"
 
-#include "nui/core/indexing/indexing.h"
+#include <string>  // IWYU pragma: keep
 
-NUI_MAKE_INDEX_TYPE(TestIndex1);
-NUI_MAKE_INDEX_TYPE(TestIndex2);
+namespace nui {
+// Get string of NuI basics version.
+//
+// This should be updated with each adjustment of basics,
+// to incentivize not touching basics.h frequently.
+std::string NuIBasicsVersion();
 
-using nui::GenericIndex;
-using nui::TestIndex1;
-using nui::TestIndex2;
+}  // namespace nui
 
-TEST_CASE("GenericIndex, Default ctor is 0.") {
-  const GenericIndex i;
-  REQUIRE(i == 0);
-  REQUIRE(i == GenericIndex(0));
-  REQUIRE(i.idx() == 0);
-  REQUIRE(i != GenericIndex::Invalid());
-}
-
-TEST_CASE("TestIndex1, Default ctor is 0.") {
-  const TestIndex1 i;
-  REQUIRE(i == 0);
-  REQUIRE(i == TestIndex1(0));
-  REQUIRE(i.idx() == 0);
-  REQUIRE(i != TestIndex1::Invalid());
-}
-
-TEST_CASE("TestIndex2, Default ctor is 0.") {
-  const TestIndex2 i;
-  REQUIRE(i == 0);
-  REQUIRE(i == TestIndex2(0));
-  REQUIRE(i.idx() == 0);
-  REQUIRE(i != TestIndex2::Invalid());
-}
+#endif  // NUI_CORE_BASICS_VERSION_H_

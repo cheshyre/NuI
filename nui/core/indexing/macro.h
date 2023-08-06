@@ -23,12 +23,7 @@
 #ifndef NUI_CORE_INDEXING_MACRO_H_
 #define NUI_CORE_INDEXING_MACRO_H_
 
-#include <cstdint>
-#include <cstdlib>
-#include <utility>
-
-#include "fmt/core.h"
-#include "fmt/format.h"  // IWYU pragma: keep
+#include "nui/core/basics/basics.h"
 
 // IWYU pragma: private, include "nui/core/indexing/indexing.h"
 // IWYU pragma: friend "nui/core/indexing/.*\.h"

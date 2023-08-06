@@ -1,3 +1,8 @@
+# Module: nui::indexing
+#
+# Provides ability to define custom indices,
+# iterate over them, and convert between them quickly.
+
 add_library(
   nui_indexing
   indexing.h indexing.cc
@@ -9,7 +14,6 @@ target_link_libraries(
   PUBLIC
   fmt::fmt
 )
-
 target_include_directories(
   nui_indexing
   PUBLIC

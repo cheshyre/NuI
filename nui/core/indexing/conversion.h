@@ -144,10 +144,26 @@ class IndexConversion {
   }
 
   // Check that indices are unique.
-  bool AreIndicesUnique() const { return false; }
+  bool AreIndicesUnique() const {
+    std::size_t valid_count = 0UL;
+    for (const auto& x : lookup_table_) {
+      if (x != IndexOut::Invalid()) {
+        valid_count += 1;
+      }
+    }
+    return indices_.size() == valid_count;
+  }
 
   // Check that lookups actually correspond to correct indices.
-  bool AreLookupsCorrect() const { return false; }
+  bool AreLookupsCorrect() const {
+    bool correct = true;
+    for (std::size_t i_in = 0; i_in < indices_.size(); i_in += 1) {
+      if (lookup_table_[indices_[i_in].idx()] != i_in) {
+        correct = false;
+      }
+    }
+    return correct;
+  }
 
   // Check that invariants among data members are fulfilled.
   bool CheckInvariants() const {

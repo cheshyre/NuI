@@ -7,6 +7,7 @@ add_library(
   nui_basics
   basics.h basics.cc
   version.h version.cc
+  vector_tricks.h vector_tricks.cc
 )
 add_library(nui::basics ALIAS nui_basics)
 target_link_libraries(

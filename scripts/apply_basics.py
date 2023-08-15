@@ -55,6 +55,7 @@ with open(BASICS_PATH) as f:
 
 
 for f in FILES_TO_PROCESS:
+    f = f.replace("//", "/")
     # Check if we should skip
     skip = False
     for x in IGNORE_PATTERNS:

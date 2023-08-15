@@ -36,6 +36,28 @@ using nui::IB;
 using Table = nui::IndexConversion<IA, IB>;
 using InputVector = std::vector<IA>;
 
+inline InputVector MakeInputVectorOfSize(std::size_t i) {
+  InputVector vec;
+  vec.reserve(i);
+
+  for (const InputVector::value_type val :
+       {162, 508, 896, 212, 70,  733, 805, 590, 934, 23,  149, 357, 521,
+        397, 380, 712, 367, 332, 298, 725, 769, 404, 118, 400, 852, 426,
+        642, 564, 871, 572, 5,   918, 11,  966, 996, 296, 486, 566, 952,
+        487, 726, 600, 111, 144, 145, 363, 89,  217, 782, 779, 424, 156,
+        626, 582, 284, 596, 471, 403, 358, 202, 336, 286, 228, 240, 721,
+        651, 330, 266, 742, 516, 345, 375, 87,  201, 450, 37,  872, 931,
+        682, 63,  806, 932, 847, 644, 466, 750, 423, 669, 10,  877, 910,
+        674, 128, 880, 188, 965, 717, 813, 509, 874}) {
+    if (vec.size() == i) {
+      continue;
+    }
+    vec.push_back(val);
+  }
+
+  return vec;
+}
+
 TEST_CASE("IndexConversion, Test default ctor.") {
   const Table table;
 
@@ -45,11 +67,84 @@ TEST_CASE("IndexConversion, Test default ctor.") {
   REQUIRE(table.CheckInvariants());
 }
 
-TEST_CASE("IndexConversion, Test normal construction.") {
+TEST_CASE("IndexConversion, Test normal construction (sorted).") {
   const InputVector input = {1, 5, 8, 11};
   const Table table(input);
 
   REQUIRE(nui::AreVectorsEqual(table.InputIndices(), input));
   REQUIRE(table.TableSize() >= 12);
   REQUIRE(table.MemoryLoad() > 0);
+  REQUIRE(table.CheckInvariants());
+}
+
+TEST_CASE("IndexConversion, Test normal construction (unsorted).") {
+  const InputVector input = {5, 1, 8, 11};
+  const Table table(input);
+
+  REQUIRE(nui::AreVectorsEqual(table.InputIndices(), input));
+  REQUIRE(table.TableSize() >= 12);
+  REQUIRE(table.MemoryLoad() > 0);
+  REQUIRE(table.CheckInvariants());
+}
+
+TEST_CASE("IndexConversion, Test output indices.") {
+  for (const std::size_t input_size : {4, 8, 24, 64}) {
+    const auto input = MakeInputVectorOfSize(input_size);
+    REQUIRE(input.size() == input_size);
+    const Table table(input);
+
+    IB loop_start = *table.OutputIndices().begin();
+    IB loop_end = *table.OutputIndices().end();
+
+    REQUIRE(loop_start == 0);
+    REQUIRE(loop_end == input_size);
+
+    std::size_t loop_counter = 0UL;
+    for (const IB i : table.OutputIndices()) {
+      REQUIRE(i == loop_counter);
+      loop_counter += 1;
+    }
+    REQUIRE(loop_counter == input_size);
+  }
+}
+
+TEST_CASE("IndexConversion, Test SourceIndex.") {
+  for (const std::size_t input_size : {4, 8, 24, 64}) {
+    const auto input = MakeInputVectorOfSize(input_size);
+    REQUIRE(input.size() == input_size);
+    const Table table(input);
+
+    std::size_t loop_counter = 0UL;
+    for (const IB i : table.OutputIndices()) {
+      REQUIRE(table.SourceIndex(i) == input[loop_counter]);
+      loop_counter += 1;
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test SourceIndexSafe.") {
+  SECTION("in safe range") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      std::size_t loop_counter = 0UL;
+      for (const IB i : table.OutputIndices()) {
+        REQUIRE(table.SourceIndexSafe(i) == input[loop_counter]);
+        loop_counter += 1;
+      }
+    }
+  }
+  SECTION("in unsafe range") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IB i : {400, 600, 10000}) {
+        REQUIRE(table.SourceIndexSafe(i) == IA::Invalid());
+      }
+    }
+  }
 }

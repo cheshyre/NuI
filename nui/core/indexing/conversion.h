@@ -27,6 +27,7 @@
 // IWYU pragma: friend "nui/core/indexing/.*\.h"
 
 #include "nui/core/basics/basics.h"
+#include "nui/core/indexing/range.h"
 
 namespace nui {
 
@@ -90,7 +91,9 @@ class IndexConversion {
   const std::vector<IndexIn>& InputIndices() const { return indices_; }
 
   // Get range of out indices.
-  void OutputIndices() const {}
+  IndexRange<IndexOut> OutputIndices() const {
+    return IndexRange<IndexOut>(indices_.size());
+  }
 
   // Get input index corresponding to output index.
   IndexIn SourceIndex(IndexOut out) const { return indices_[out.idx()]; }

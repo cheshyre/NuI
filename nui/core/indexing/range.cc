@@ -20,15 +20,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef NUI_CORE_INDEXING_INDEXING_H_
-#define NUI_CORE_INDEXING_INDEXING_H_
-
-// IWYU pragma: begin_exports
-
-#include "nui/core/indexing/conversion.h"
-#include "nui/core/indexing/macro.h"
 #include "nui/core/indexing/range.h"
-
-// IWYU pragma: end_exports
-
-#endif  // NUI_CORE_INDEXING_INDEXING_H_

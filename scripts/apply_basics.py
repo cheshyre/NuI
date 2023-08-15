@@ -9,6 +9,7 @@
 # THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from sys import argv
+from pathlib import Path
 
 
 def print_usage(code):
@@ -43,7 +44,8 @@ BASICS_PATH = "{}/../{}".format(
 )
 
 IGNORE_PATTERNS = [
-    "nui/core/basics",
+    # This is ignored by construction now
+    # "nui/core/basics",
     "lib"
 ]
 
@@ -55,11 +57,18 @@ with open(BASICS_PATH) as f:
 
 
 for f in FILES_TO_PROCESS:
+    f = f.replace("//", "/")
     # Check if we should skip
     skip = False
     for x in IGNORE_PATTERNS:
         if x in f:
             skip = True
+    # Check if file is in basics directory
+    basics_path_parent = Path(BASICS_PATH).resolve().parent
+    f_path_parent = Path(f).resolve().parent
+    if str(basics_path_parent) == str(f_path_parent):
+        # If it is, we skip
+        skip = True
     if skip:
         print(f"Skipping {f}")
         continue

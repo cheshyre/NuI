@@ -1,0 +1,7 @@
+path_classifiers:
+  test:
+    - exclude: /
+    - tests
+  library:
+    - exclude: /
+    - lib

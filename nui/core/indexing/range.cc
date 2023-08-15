@@ -20,31 +20,4 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef NUI_CORE_BASICS_BASICS_H_
-#define NUI_CORE_BASICS_BASICS_H_
-
-// IWYU pragma: begin_exports
-
-// STL
-#include <algorithm>
-#include <cmath>
-#include <cstdint>
-#include <cstdlib>
-#include <initializer_list>
-#include <memory>
-#include <string>
-#include <string_view>
-#include <utility>
-#include <vector>
-
-// fmt
-#include "fmt/core.h"
-#include "fmt/format.h"
-
-// NuI
-#include "nui/core/basics/vector_tricks.h"
-#include "nui/core/basics/version.h"
-
-// IWYU pragma: end_exports
-
-#endif  // NUI_CORE_BASICS_BASICS_H_
+#include "nui/core/indexing/range.h"

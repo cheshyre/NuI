@@ -25,7 +25,9 @@
 
 // IWYU pragma: begin_exports
 
+#include "nui/core/indexing/conversion.h"
 #include "nui/core/indexing/macro.h"
+#include "nui/core/indexing/range.h"
 
 // IWYU pragma: end_exports
 

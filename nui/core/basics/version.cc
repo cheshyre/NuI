@@ -27,7 +27,7 @@
 namespace nui {
 
 std::string NuIBasicsVersion() {
-  const int version = 1;
+  const int version = 2;
   return fmt::format("{:03d}", version);
 }
 

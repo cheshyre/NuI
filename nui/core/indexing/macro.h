@@ -23,10 +23,10 @@
 #ifndef NUI_CORE_INDEXING_MACRO_H_
 #define NUI_CORE_INDEXING_MACRO_H_
 
-#include "nui/core/basics/basics.h"
-
 // IWYU pragma: private, include "nui/core/indexing/indexing.h"
 // IWYU pragma: friend "nui/core/indexing/.*\.h"
+
+#include "nui/core/basics/basics.h"
 
 // This is a huge macro to create an index type.
 //

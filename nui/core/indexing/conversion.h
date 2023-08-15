@@ -113,7 +113,7 @@ class IndexConversion {
   //
   // Invalid conversions will be == IndexOut::Invalid().
   // If in >= TableSize(), this will probably segfault.
-  IndexOut Convert(IndexIn in) const { return lookup_table_[in]; }
+  IndexOut Convert(IndexIn in) const { return lookup_table_[in.idx()]; }
 
   // Convert input index to output.
   //
@@ -130,7 +130,7 @@ class IndexConversion {
   //
   // If in >= TableSize(), this will probably segfault.
   int IsValid(IndexIn in) const {
-    return lookup_table_[in] != IndexOut::Invalid();
+    return lookup_table_[in.idx()] != IndexOut::Invalid();
   }
 
   // Check if input index is valid in conversion table.

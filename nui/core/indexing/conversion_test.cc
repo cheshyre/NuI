@@ -148,3 +148,302 @@ TEST_CASE("IndexConversion, Test SourceIndexSafe.") {
     }
   }
 }
+
+TEST_CASE("IndexConversion, Test Convert.") {
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.Convert(input[out.idx()]) == out);
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.Convert(in) != IB::Invalid());
+          REQUIRE(input[table.Convert(in).idx()] == in);
+        } else {
+          REQUIRE(table.Convert(in) == IB::Invalid());
+        }
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test ConvertSafe.") {
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.ConvertSafe(input[out.idx()]) == out);
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.ConvertSafe(in) != IB::Invalid());
+          REQUIRE(input[table.Convert(in).idx()] == in);
+        } else {
+          REQUIRE(table.ConvertSafe(in) == IB::Invalid());
+        }
+      }
+    }
+  }
+  SECTION("in unsafe range") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize(), 10000)) {
+        REQUIRE(table.ConvertSafe(in) == IB::Invalid());
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test IsValid.") {
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.IsValid(input[out.idx()]));
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.IsValid(in));
+        } else {
+          REQUIRE_FALSE(table.IsValid(in));
+        }
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test IsValidSafe.") {
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.IsValidSafe(input[out.idx()]));
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.IsValidSafe(in));
+        } else {
+          REQUIRE_FALSE(table.IsValidSafe(in));
+        }
+      }
+    }
+  }
+  SECTION("in unsafe range") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize(), 10000)) {
+        REQUIRE_FALSE(table.IsValidSafe(in));
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test Convert with table size.") {
+  const IA max_val = 4999;
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.Convert(input[out.idx()]) == out);
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.Convert(in) != IB::Invalid());
+          REQUIRE(input[table.Convert(in).idx()] == in);
+        } else {
+          REQUIRE(table.Convert(in) == IB::Invalid());
+        }
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test ConvertSafe with table size.") {
+  const IA max_val = 4999;
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.ConvertSafe(input[out.idx()]) == out);
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.ConvertSafe(in) != IB::Invalid());
+          REQUIRE(input[table.Convert(in).idx()] == in);
+        } else {
+          REQUIRE(table.ConvertSafe(in) == IB::Invalid());
+        }
+      }
+    }
+  }
+  SECTION("in unsafe range") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize(), 10000)) {
+        REQUIRE(table.ConvertSafe(in) == IB::Invalid());
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test IsValid with table size.") {
+  const IA max_val = 4999;
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.IsValid(input[out.idx()]));
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.IsValid(in));
+        } else {
+          REQUIRE_FALSE(table.IsValid(in));
+        }
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test IsValidSafe with table size.") {
+  const IA max_val = 4999;
+  SECTION("in safe range (valid)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IB out : table.OutputIndices()) {
+        REQUIRE(table.IsValidSafe(input[out.idx()]));
+      }
+    }
+  }
+  SECTION("in safe range (general)") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize())) {
+        if (std::find(input.begin(), input.end(), in) != input.end()) {
+          REQUIRE(table.IsValidSafe(in));
+        } else {
+          REQUIRE_FALSE(table.IsValidSafe(in));
+        }
+      }
+    }
+  }
+  SECTION("in unsafe range") {
+    for (const std::size_t input_size : {4, 8, 24, 64}) {
+      const auto input = MakeInputVectorOfSize(input_size);
+      REQUIRE(input.size() == input_size);
+      const Table table(input, max_val);
+      REQUIRE(table.TableSize() > max_val);
+
+      for (const IA in : nui::IndexRange<IA>(table.TableSize(), 10000)) {
+        REQUIRE_FALSE(table.IsValidSafe(in));
+      }
+    }
+  }
+}
+
+TEST_CASE("IndexConversion, Test AreIndicesUnique on nonunique case.") {
+  const Table table({1, 1, 1});
+  REQUIRE_FALSE(table.AreIndicesUnique());
+}

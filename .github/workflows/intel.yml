@@ -1,0 +1,58 @@
+name: linux
+
+on: [push, pull_request]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        build_type: [Debug, Release]
+        std: [17, 20]
+        os: [ubuntu-20.04, ubuntu-22.04]
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Checkout submodules
+      run: git submodule update --init --recursive
+
+    - name: Intel Apt repository
+      timeout-minutes: 1
+      run: |
+        wget https://apt.repos.intel.com/intel-gpg-keys/GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        sudo apt-key add GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        rm GPG-PUB-KEY-INTEL-SW-PRODUCTS-2023.PUB
+        echo "deb https://apt.repos.intel.com/oneapi all main" | sudo tee /etc/apt/sources.list.d/oneAPI.list
+        sudo apt-get update
+    
+    - name: Install Intel oneAPI
+      timeout-minutes: 5
+      run: sudo apt-get install intel-oneapi-compiler-fortran intel-oneapi-compiler-dpcpp-cpp-and-cpp-classic intel-oneapi-mpi intel-oneapi-mpi-devel intel-oneapi-mkl ninja-build
+
+    - name: Setup Intel oneAPI environment
+      run: |
+        source /opt/intel/oneapi/setvars.sh
+        printenv >> $GITHUB_ENV
+
+    - name: Create Build Environment
+      run: |
+        cmake -E make_directory ${{github.workspace}}/build
+
+    - name: Configure
+      working-directory: ${{github.workspace}}/build
+      env:
+        CC: icc
+        CXX: icpc
+      run: |
+        cmake -DCMAKE_BUILD_TYPE=${{matrix.build_type}} -DCMAKE_CXX_STANDARD=${{matrix.std}} ${{github.workspace}}
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      run: cmake --build . --config ${{matrix.build_type}}
+
+    - name: Test
+      working-directory: ${{github.workspace}}/build
+      run: ctest -C ${{matrix.build_type}}
+      env:
+        CTEST_OUTPUT_ON_FAILURE: True

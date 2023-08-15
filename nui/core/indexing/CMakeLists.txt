@@ -7,6 +7,7 @@ add_library(
   nui_indexing
   indexing.h indexing.cc
   macro.h macro.cc
+  conversion.h conversion.cc
 )
 add_library(nui::indexing ALIAS nui_indexing)
 target_link_libraries(
@@ -31,4 +32,18 @@ target_link_libraries(
 )
 catch_discover_tests(
   nui_core_indexing_macro_test
+)
+
+add_executable(
+  nui_core_indexing_conversion_test
+  conversion_test.cc
+)
+target_link_libraries(
+  nui_core_indexing_conversion_test
+  Catch2::Catch2WithMain
+  nui::indexing
+  nui::basics
+)
+catch_discover_tests(
+  nui_core_indexing_conversion_test
 )

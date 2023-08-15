@@ -20,14 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#ifndef NUI_CORE_INDEXING_INDEXING_H_
-#define NUI_CORE_INDEXING_INDEXING_H_
-
-// IWYU pragma: begin_exports
-
 #include "nui/core/indexing/conversion.h"
-#include "nui/core/indexing/macro.h"
 
-// IWYU pragma: end_exports
+#include "catch2/catch_test_macros.hpp"
 
-#endif  // NUI_CORE_INDEXING_INDEXING_H_
+#include "nui/core/basics/basics.h"
+#include "nui/core/indexing/indexing.h"
+
+NUI_MAKE_INDEX_TYPE(IA);
+NUI_MAKE_INDEX_TYPE(IB);
+
+using nui::IA;
+using nui::IB;
+
+using Table = nui::IndexConversion<IA, IB>;
+using InputVector = std::vector<IA>;
+
+TEST_CASE("IndexConversion, Test default ctor.") {
+  const Table table;
+
+  REQUIRE(table.TableSize() == 0);
+  REQUIRE(table.InputIndices().size() == 0);
+  REQUIRE(table.MemoryLoad() == 0);
+  REQUIRE(table.CheckInvariants());
+}
+
+TEST_CASE("IndexConversion, Test normal construction.") {
+  const InputVector input = {1, 5, 8, 11};
+  const Table table(input);
+
+  REQUIRE(nui::AreVectorsEqual(table.InputIndices(), input));
+  REQUIRE(table.TableSize() >= 12);
+  REQUIRE(table.MemoryLoad() > 0);
+}
